@@ -18,18 +18,17 @@ struct Person
     void run(int howFast, bool startWithLeftFoot);
     void stepForward(int howFar, int howFast);
     
-    struct Feet
+    struct Foot
     {
         int stepSize();
         void stepForward();
     };
 };
 
-
 void Person::run(int howFast, bool startWithLeftFoot)
 {   
-    Feet rightFoot;
-    Feet leftFoot;
+    Foot rightFoot;
+    Foot leftFoot;
 
     if(startWithLeftFoot == true)
     {
@@ -44,7 +43,17 @@ void Person::run(int howFast, bool startWithLeftFoot)
     distanceTraveled += leftFoot.stepSize() + rightFoot.stepSize();
 }
 
-
+int Person::Foot::stepSize()
+{
+    int currentLocation;
+    int nextLocation;
+    int stepSize = nextLocation - currentLocation;
+}
+void Person::Foot::stepForward()
+{
+    int nextLocation;
+    int currentLocation = nextLocation;
+}
 
  /*
  2) provide implementations for the member functions you declared in your 10 user-defined types from the previous video outside of your UDT definitions.
@@ -66,8 +75,8 @@ send me a DM to check your pull request
 /*
  1)
  */
- struct Filter
- {
+struct Filter
+{
     double frequency = 4000.0;
     int filterType = 2;
     float dryWet = 1.0f;
@@ -95,8 +104,8 @@ void Filter::FilterKnob::spawnKnob(int numberOfKnobs, float knobLocation)
 /*
  2)
  */
- struct WavetableOscillator
- {
+struct WavetableOscillator
+{
     double frequency = 4000.0;
     int waveShape = 2;
     float volumeLevel = 1.0f;
@@ -110,15 +119,15 @@ void Filter::FilterKnob::spawnKnob(int numberOfKnobs, float knobLocation)
     };
 
     int getNextFrequencyInSequence(float nextFrequency);
- };
+};
 
- void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float loadTimeOffset)
- {
+void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float loadTimeOffset)
+{
     Wavetable myWavetable;
     if((currentWavetable != wavetableToLoad) && (loadTimeOffset > 0)){
         currentWavetable = wavetableToLoad;
     }
- }
+}
 /*
  3)
  */
@@ -144,6 +153,8 @@ void ADSREnvelope::playNoteOnTrigger(ADSREnvelope newEnvelope)
         newEnvelope.playNote();
     }
 }
+
+void ADSREnvelope::playNote(){}
 /*
  4)
  */
@@ -247,6 +258,8 @@ void Synthesizer::playSound(Synthesizer mySynth, float durationLength, bool pitc
         startSound();
     }
 }
+
+void Synthesizer::startSound(){}
 /*
  8)
  */
@@ -274,6 +287,7 @@ float SimpleLooper::createLoopPoint(float startPoint, float endPoint)
         myLoop.startLooping();
     }
 }
+void SimpleLooper::startLooping(){}
 /*
  9)
  */
@@ -342,6 +356,8 @@ char SearchEngine::SearchBar::showBookmarks(int totalBookmarks)
         mySearchBar.show();
     }
 }
+void SearchEngine::SearchBar::show(){}
+void SearchEngine::SearchBar::clearSearchEngine(){}
 
 #include <iostream>
 int main()
