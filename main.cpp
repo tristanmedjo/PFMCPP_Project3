@@ -240,17 +240,20 @@ struct SimpleLooper
     bool shouldLoop = true;
 
     //SimpleLooper(int audioClipList); this was the original member function, but I am not sure how to call it below. I know we need to specify the type, but since there is no type, how would this work? I am adding a new function for now. ALSO, this function was causing problems with declaring a type, comment down below
-    int createLoopPoint(int startPoint, int endPoint);
-    void startLooping();
+    float createLoopPoint(float startPoint, float endPoint);
+    void startLooping(float startPoint, float endPoint);
 };
 
-int SimpleLooper::createLoopPoint(int, int)
+float SimpleLooper::createLoopPoint(float newStart, float newEnd)
 {
     SimpleLooper myLoop; // When I had SimpleLooper(int audioClipList) above, it was causing "no matching constructor for initialization of myLoop"
-    myLoop.startLooping();
+    myLoop.startLooping(newStart, newEnd);
     return{};
 }
-void SimpleLooper::startLooping(){}
+void SimpleLooper::startLooping(float startPoint, float endPoint){
+    startPoint = loopStartPoint;
+    endPoint = loopEndPoint;
+}
 /*
  9)
  */
