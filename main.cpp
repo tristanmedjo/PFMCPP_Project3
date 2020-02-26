@@ -91,7 +91,8 @@ void Filter::FilterKnob::spawnKnob(int numberOfKnobs, float knobLocation)
 {
     FilterKnob newKnob;
 
-    if(numberOfKnobs > 0){
+    if(numberOfKnobs > 0)
+    {
         newKnob.spawnKnob(numberOfKnobs, knobLocation);
     }
 }
@@ -117,7 +118,8 @@ struct WavetableOscillator
 
 void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float loadTimeOffset)
 {
-    if((currentWavetable != wavetableToLoad) && (loadTimeOffset > 0)){
+    if((currentWavetable != wavetableToLoad) && (loadTimeOffset > 0))
+    {
         currentWavetable = wavetableToLoad;
     }
 }
@@ -137,7 +139,8 @@ struct ADSREnvelope
 
 void ADSREnvelope::playNoteOnTrigger(ADSREnvelope newEnvelope)
 {
-    if (newEnvelope.isMidiControlEnabled == true){
+    if (newEnvelope.isMidiControlEnabled == true)
+    {
         newEnvelope.playNote();
     }
     else
