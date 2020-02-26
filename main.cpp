@@ -202,7 +202,7 @@ struct Delay
     void copySettingsToAllOfSameType(Delay defaultDelay, bool shouldOverride);
 };
 
-void Delay::copySettingsToAllOfSameType(Delay settingsToCopy, bool shouldOverride)
+void Delay::copySettingsToAllOfSameType(Delay settingsToCopy, bool)
 {
     Delay myDelay;
 
@@ -210,7 +210,6 @@ void Delay::copySettingsToAllOfSameType(Delay settingsToCopy, bool shouldOverrid
     myDelay.feedback = settingsToCopy.feedback;
     myDelay.delayRate = settingsToCopy.delayRate;
     myDelay.pingPong = settingsToCopy.pingPong;
-    }
 }
 /*
  7)
@@ -225,7 +224,7 @@ struct Synthesizer
     void startSound();
 };
 
-void Synthesizer::playSound(Synthesizer, float durationLength, bool)
+void Synthesizer::playSound(Synthesizer, float, bool)
 {
     startSound();
 }
@@ -245,11 +244,10 @@ struct SimpleLooper
     void startLooping();
 };
 
-int SimpleLooper::createLoopPoint(int startPoint, int endPoint)
+int SimpleLooper::createLoopPoint(int, int)
 {
     SimpleLooper myLoop; // When I had SimpleLooper(int audioClipList) above, it was causing "no matching constructor for initialization of myLoop"
-        myLoop.startLooping();
-    }
+    myLoop.startLooping();
     return{};
 }
 void SimpleLooper::startLooping(){}
