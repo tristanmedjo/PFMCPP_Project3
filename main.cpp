@@ -25,7 +25,7 @@ struct Person
     };
 };
 
-void Person::run(int howFast, bool startWithLeftFoot)
+void Person::run(int, bool startWithLeftFoot)
 {   
     Foot rightFoot;
     Foot leftFoot;
@@ -45,15 +45,9 @@ void Person::run(int howFast, bool startWithLeftFoot)
 
 int Person::Foot::stepSize()
 {
-    int currentLocation;
-    int nextLocation;
-    int stepSize = nextLocation - currentLocation;
+    return{};
 }
-void Person::Foot::stepForward()
-{
-    int nextLocation;
-    int currentLocation = nextLocation;
-}
+void Person::Foot::stepForward(){}
 
  /*
  2) provide implementations for the member functions you declared in your 10 user-defined types from the previous video outside of your UDT definitions.
@@ -123,7 +117,6 @@ struct WavetableOscillator
 
 void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float loadTimeOffset)
 {
-    Wavetable myWavetable;
     if((currentWavetable != wavetableToLoad) && (loadTimeOffset > 0)){
         currentWavetable = wavetableToLoad;
     }
@@ -178,6 +171,7 @@ int Reverb::setNextReverbSettings(Reverb newVerbSettings)
     {
         newVerbSettings.decayTime = oldVerbSettings.decayTime;
     }
+    return{};
 }
 
 /*
@@ -213,10 +207,9 @@ struct Delay
     void copySettingsToAllOfSameType(Delay defaultDelay, bool shouldOverride);
 };
 
-Delay myDelay;
-
 void Delay::copySettingsToAllOfSameType(Delay settingsToCopy, bool shouldOverride)
 {
+    Delay myDelay;
     if(!shouldOverride)
     {
         shouldOverride = true;
@@ -246,7 +239,7 @@ struct Synthesizer
     void startSound();
 };
 
-void Synthesizer::playSound(Synthesizer mySynth, float durationLength, bool pitchGlideEnabled)
+void Synthesizer::playSound(Synthesizer, float durationLength, bool)
 {
     if(durationLength > 0)
     {
@@ -270,11 +263,11 @@ struct SimpleLooper
     bool shouldLoop = true;
 
     //SimpleLooper(int audioClipList); this was the original member function, but I am not sure how to call it below. I know we need to specify the type, but since there is no type, how would this work? I am adding a new function for now. ALSO, this function was causing problems with declaring a type, comment down below
-    float createLoopPoint(float startPoint, float endPoint);
+    int createLoopPoint(int startPoint, int endPoint);
     void startLooping();
 };
 
-float SimpleLooper::createLoopPoint(float startPoint, float endPoint)
+int SimpleLooper::createLoopPoint(int startPoint, int endPoint)
 {
     SimpleLooper myLoop; // When I had SimpleLooper(int audioClipList) above, it was causing "no matching constructor for initialization of myLoop"
     if((myLoop.shouldLoop = true) && (startPoint != endPoint))
@@ -283,9 +276,9 @@ float SimpleLooper::createLoopPoint(float startPoint, float endPoint)
     }
     else
     {
-        endPoint + 10.f;
         myLoop.startLooping();
     }
+    return{};
 }
 void SimpleLooper::startLooping(){}
 /*
@@ -355,6 +348,7 @@ char SearchEngine::SearchBar::showBookmarks(int totalBookmarks)
     {
         mySearchBar.show();
     }
+    return{};
 }
 void SearchEngine::SearchBar::show(){}
 void SearchEngine::SearchBar::clearSearchEngine(){}
