@@ -139,15 +139,7 @@ struct ADSREnvelope
 
 void ADSREnvelope::playNoteOnTrigger(ADSREnvelope newEnvelope)
 {
-    if (newEnvelope.isMidiControlEnabled == true)
-    {
-        newEnvelope.playNote();
-    }
-    else
-    {
-        newEnvelope.isMidiControlEnabled = true;
-        newEnvelope.playNote();
-    }
+    newEnvelope.playNote();
 }
 
 void ADSREnvelope::playNote(){}
@@ -213,20 +205,11 @@ struct Delay
 void Delay::copySettingsToAllOfSameType(Delay settingsToCopy, bool shouldOverride)
 {
     Delay myDelay;
-    if(!shouldOverride)
-    {
-        shouldOverride = true;
-        myDelay.bpmSync = settingsToCopy.bpmSync;
-        myDelay.feedback = settingsToCopy.feedback;
-        myDelay.delayRate = settingsToCopy.delayRate;
-        myDelay.pingPong = settingsToCopy.pingPong;
-    }
-    else
-    {
-        myDelay.bpmSync = settingsToCopy.bpmSync;
-        myDelay.feedback = settingsToCopy.feedback;
-        myDelay.delayRate = settingsToCopy.delayRate;
-        myDelay.pingPong = settingsToCopy.pingPong;
+
+    myDelay.bpmSync = settingsToCopy.bpmSync;
+    myDelay.feedback = settingsToCopy.feedback;
+    myDelay.delayRate = settingsToCopy.delayRate;
+    myDelay.pingPong = settingsToCopy.pingPong;
     }
 }
 /*
@@ -244,15 +227,7 @@ struct Synthesizer
 
 void Synthesizer::playSound(Synthesizer, float durationLength, bool)
 {
-    if(durationLength > 0)
-    {
-        startSound();
-    }
-    else
-    {
-        durationLength = 10;
-        startSound();
-    }
+    startSound();
 }
 
 void Synthesizer::startSound(){}
@@ -273,12 +248,6 @@ struct SimpleLooper
 int SimpleLooper::createLoopPoint(int startPoint, int endPoint)
 {
     SimpleLooper myLoop; // When I had SimpleLooper(int audioClipList) above, it was causing "no matching constructor for initialization of myLoop"
-    if((myLoop.shouldLoop = true) && (startPoint != endPoint))
-    {
-        myLoop.startLooping();
-    }
-    else
-    {
         myLoop.startLooping();
     }
     return{};
