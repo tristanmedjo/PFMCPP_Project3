@@ -58,15 +58,29 @@ int main()
  */
 struct Filter
 {
-    double frequency = 4000.0;
-    int filterType = 2;
-    float dryWet = 1.0f;
+    double frequency;
+    int filterType;
+    float dryWet;
+
+    Filter()
+    {
+        frequency = 4000.0;
+        filterType = 2;
+        dryWet = 1.0f;
+    }
 
     struct FilterKnob
     {
         float knobPosition;
-        bool knobOverride = false;
-        int color = 1;
+        bool knobOverride;
+        int color;
+
+        FilterKnob()
+        {
+            knobPosition = 1.0f;
+            knobOverride = false;
+            color = 1;
+        }
 
         void spawnKnob(int numberOfKnobs, float knobLocation);
     };
@@ -88,15 +102,30 @@ void Filter::FilterKnob::spawnKnob(int numberOfKnobs, float knobLocation)
  */
 struct WavetableOscillator
 {
-    double frequency = 4000.0;
-    int waveShape = 2;
-    float volumeLevel = 1.0f;
+    double frequency;
+    int waveShape;
+    float volumeLevel;
+
+    WavetableOscillator()
+    {
+        frequency = 4000.0;
+        waveShape = 2;
+        volumeLevel = 1.0f;
+    }
 
     struct Wavetable
     {   
-        int maxNumberOfWaveforms = 100;
-        bool interpolationOn = true;
-        int currentWavetable = 0;
+        int maxNumberOfWaveforms;
+        bool interpolationOn;
+        int currentWavetable;
+
+        Wavetable()
+        {
+        maxNumberOfWaveforms = 100;
+        interpolationOn = true;
+        currentWavetable = 0;
+        }
+
         void loadWavetable(int wavetableToLoad, float loadTimeOffset);
     };
 
@@ -115,12 +144,22 @@ void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float lo
  */
 struct ADSREnvelope
 {
-    double attack  = 2.0;
-    double decay = 2.0;
-    float sustain = 1.f;
-    float release =2.4f;
-    bool isMidiControlEnabled = true;
-    void playNote();
+    double attack;
+    double decay;
+    float sustain;
+    float release;
+    bool isMidiControlEnabled;
+
+    ADSREnvelope()
+    {
+        attack = 2.0;
+        decay = 2.0;
+        sustain = 1.f;
+        release =2.4f;
+        isMidiControlEnabled = true;
+    }
+
+    void playNote(); 
     void playNoteOnTrigger(ADSREnvelope myEnvelope);
 };
 
@@ -129,7 +168,10 @@ void ADSREnvelope::playNoteOnTrigger(ADSREnvelope newEnvelope)
     newEnvelope.playNote();
 }
 
-void ADSREnvelope::playNote(){}
+void ADSREnvelope::playNote()
+{
+    std::cout << "Playing note! Your ADSR Values are:\nAttack: " << attack << "\nDecay: " << decay << "\nSustain: " << sustain << "\nRelease " << release << std::endl;
+}
 /*
  4)
  */
@@ -139,6 +181,15 @@ struct Reverb
     float roomSize;
     double inputVolume;
     double outputVolume;
+
+    Reverb()
+    {
+        decayTime = 1;
+        roomSize = 3.5f;
+        inputVolume = 1.0;
+        outputVolume = 1.0;
+    }
+    
     int setNextReverbSettings(Reverb newVerbSettings);
 };
 
@@ -161,10 +212,18 @@ int Reverb::setNextReverbSettings(Reverb newVerbSettings)
  */
 struct Equalizer
 {
-    double frequency = 2000.19;
-    float equalizerQ = 1.f;
-    float gain = 0.5f;
-    int enableEQ = 1;
+    double frequency;
+    float equalizerQ;
+    float gain;
+    int enableEQ;
+
+    Equalizer()
+    {
+        frequency = 2000.19;
+        equalizerQ = 1.f;
+        gain = 0.5f;
+        enableEQ = 1;
+    }
     
     void disableEqualizer(Equalizer defaultEQ);
 };
@@ -181,10 +240,18 @@ void Equalizer::disableEqualizer(Equalizer changeThisEQ)
  */
 struct Delay
 {
-    bool bpmSync = false;
-    float feedback = 50.f;
-    int delayRate = 1;
-    bool pingPong = false;
+    bool bpmSync;
+    float feedback;
+    int delayRate;
+    bool pingPong;
+
+    Delay()
+    {
+        bpmSync = false;
+        feedback = 50.f;
+        delayRate = 1;
+        pingPong = false;
+    }
 
     void copySettingsToAllOfSameType(Delay defaultDelay, bool shouldOverride);
 };
@@ -205,7 +272,7 @@ struct Synthesizer
 {
     WavetableOscillator oscillator;
     Filter combFilter;
-    ADSREnvelope defaultEnvelope;
+    ADSREnvelope defaultEnvelope; // I dont need to do any constructor here, since the UDT's I'm referencing already have constructors... correct?
 
     void playSound(Synthesizer mySynth, float durationLength, bool pitchGlideEnabled);
     void startSound();
@@ -222,18 +289,24 @@ void Synthesizer::startSound(){}
  */
 struct SimpleLooper
 {
-    float loopStartPoint = 0.f;
-    float loopEndPoint = 10.f;
-    bool shouldLoop = true;
+    float loopStartPoint;
+    float loopEndPoint;
+    bool shouldLoop;
 
-    //SimpleLooper(int audioClipList); this was the original member function, but I am not sure how to call it below. I know we need to specify the type, but since there is no type, how would this work? I am adding a new function for now. ALSO, this function was causing problems with declaring a type, comment down below
+    SimpleLooper()
+    {
+        loopStartPoint = 0.f;
+        loopEndPoint = 10.f;
+        shouldLoop = true;
+    }
+
     float createLoopPoint(float startPoint, float endPoint);
     void startLooping(float startPoint, float endPoint);
 };
 
 float SimpleLooper::createLoopPoint(float newStart, float newEnd)
 {
-    SimpleLooper myLoop; // When I had SimpleLooper(int audioClipList) above, it was causing "no matching constructor for initialization of myLoop"
+    SimpleLooper myLoop;
     myLoop.startLooping(newStart, newEnd);
     return {};
 }
@@ -246,15 +319,29 @@ void SimpleLooper::startLooping(float startPoint, float endPoint){
  */
 struct Bank
 {
-    float totalMoney = 100000000.f; // 100,000,000
-    bool canLoanMoney = true;
-    float yearlyInterestRate = 4.0f;
+    float totalMoney; // 100,000,000
+    bool canLoanMoney;
+    float yearlyInterestRate;
+
+    Bank()
+    {
+        totalMoney = 100000000.f; 
+        canLoanMoney = true;
+        yearlyInterestRate = 4.0f;
+    }
     
     struct PersonalAccount
     {
-        float valueOfAccount = 50000.f;
-        bool owesMoney = true;
-        int totalAssetsHeld = 15;
+        float valueOfAccount;
+        bool owesMoney;
+        int totalAssetsHeld;
+
+        PersonalAccount()
+        {
+            valueOfAccount = 50000.f;
+            owesMoney = true;
+            totalAssetsHeld = 15;
+        }
 
         int getLastDepositAmount(PersonalAccount myAccount, float lastDepositTime);
     };
@@ -268,6 +355,7 @@ void Bank::payOffLoans(Bank chase, PersonalAccount tristanAccount)
     {
         chase.totalMoney += tristanAccount.valueOfAccount;
         tristanAccount.valueOfAccount = 0;
+        std::cout << "Thank you for your payment, but you STILL owe more! Current balance is: " << tristanAccount.valueOfAccount << std::endl;
     }
     else
     {
@@ -279,15 +367,29 @@ void Bank::payOffLoans(Bank chase, PersonalAccount tristanAccount)
  */
 struct SearchEngine
 {
-    int totalSearches = 50;
-    int totalAdsBlocked = 100;
-    bool accountLoggedIn = false;
+    int totalSearches;
+    int totalAdsBlocked;
+    bool accountLoggedIn;
+
+    SearchEngine()
+    {
+        totalSearches = 50;
+        totalAdsBlocked = 100;
+        accountLoggedIn = false;
+    }
 
     struct SearchBar
     {
-        float widthOfSearchBar = 100.f;
-        float heightOfSearchBar = 5.f;
-        bool searchEnabled = true;
+        float widthOfSearchBar;
+        float heightOfSearchBar;
+        bool searchEnabled;
+
+        SearchBar()
+        {
+            widthOfSearchBar = 100.f;
+            heightOfSearchBar = 5.f;
+            searchEnabled = true;
+        }
 
         char showBookmarks(int totalBookmarks);
         void show();
@@ -316,6 +418,15 @@ void SearchEngine::SearchBar::clearSearchEngine(){}
 #include <iostream>
 int main()
 {
-    Example::main();
-    std::cout << "good to go!" << std::endl;
+    
+    Bank localBank;
+    Bank::PersonalAccount tristanAccount;
+
+    localBank.payOffLoans(localBank, tristanAccount);
+
+    ADSREnvelope myEnvelope;
+    myEnvelope.playNote();
+
+   // Example::main();
+   // std::cout << "good to go!" << std::endl;
 }
