@@ -73,13 +73,13 @@ struct Filter
     {
         float knobPosition;
         bool knobOverride;
-        int color;
+        int knobID;
 
         FilterKnob()
         {
             knobPosition = 1.0f;
             knobOverride = false;
-            color = 1;
+            knobID = 1;
         }
 
         void spawnKnob(int numberOfKnobs, float knobLocation);
@@ -96,6 +96,12 @@ void Filter::FilterKnob::spawnKnob(int numberOfKnobs, float knobLocation)
     {
         newKnob.spawnKnob(numberOfKnobs, knobLocation);
     }
+}
+
+void Filter::updateKnobPosition(FilterKnob knobToUpdate, double nextKnobPosition)
+{
+    int knobID = knobToUpdate.knobID;
+    std::cout << "\nThe knob to update is: " << knobID << ". The next knob position is: " << nextKnobPosition << "." << std::endl;
 }
 /*
  2)
@@ -121,9 +127,9 @@ struct WavetableOscillator
 
         Wavetable()
         {
-        maxNumberOfWaveforms = 100;
-        interpolationOn = true;
-        currentWavetable = 0;
+            maxNumberOfWaveforms = 100;
+            interpolationOn = true;
+            currentWavetable = 0;
         }
 
         void loadWavetable(int wavetableToLoad, float loadTimeOffset);
@@ -355,7 +361,7 @@ void Bank::payOffLoans(Bank chase, PersonalAccount tristanAccount)
     {
         chase.totalMoney += tristanAccount.valueOfAccount;
         tristanAccount.valueOfAccount = 0;
-        std::cout << "Thank you for your payment, but you STILL owe more! Current balance is: " << tristanAccount.valueOfAccount << std::endl;
+        std::cout << "\nThank you for your payment, but you STILL owe more! Current balance is: " << tristanAccount.valueOfAccount << "." << std::endl;
     }
     else
     {
@@ -417,15 +423,26 @@ void SearchEngine::SearchBar::clearSearchEngine(){}
 
 #include <iostream>
 int main()
-{
+{ 
     
+    Filter myFilter;
+    Filter::FilterKnob myKnob;
+    WavetableOscillator myWavetableOsc;
+    WavetableOscillator::Wavetable myWavetable;
+    Reverb myReverb;
+    Equalizer myEqualizer;
+    Delay myDelay;
+    Synthesizer mySynth;
+    SimpleLooper looper;
+    SearchEngine mySearchEngine;
+    SearchEngine::SearchBar mySearchBar;
     Bank localBank;
     Bank::PersonalAccount tristanAccount;
-
-    localBank.payOffLoans(localBank, tristanAccount);
-
     ADSREnvelope myEnvelope;
-    myEnvelope.playNote();
+   
+    myEnvelope.playNote(); 
+    myFilter.updateKnobPosition(myKnob, 5.3);
+    localBank.payOffLoans(localBank, tristanAccount);
 
    // Example::main();
    // std::cout << "good to go!" << std::endl;
