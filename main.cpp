@@ -92,16 +92,14 @@ void Filter::FilterKnob::spawnKnob(int numberOfKnobs, float knobLocation)
 {
     FilterKnob newKnob;
 
-    if(numberOfKnobs > 0)
-    {
-        newKnob.spawnKnob(numberOfKnobs, knobLocation);
-    }
+    if(numberOfKnobs < 10) newKnob.spawnKnob(numberOfKnobs, knobLocation);
+    std::cout << "You are trying to spawn too many knobs at once!\n\n";
 }
 
 void Filter::updateKnobPosition(FilterKnob knobToUpdate, double nextKnobPosition)
 {
     int knobID = knobToUpdate.knobID;
-    std::cout << "\nThe knob to update is: " << knobID << ". The next knob position is: " << nextKnobPosition << "." << std::endl;
+    std::cout << "The knob to update is: " << knobID << ". The next knob position is: " << nextKnobPosition << "." << std::endl;
 }
 /*
  2)
@@ -135,7 +133,11 @@ struct WavetableOscillator
         void loadWavetable(int wavetableToLoad, float loadTimeOffset);
     };
 
-    int getNextFrequencyInSequence(float nextFrequency);
+    int getNextFrequencyInSequence(float nextFrequency)
+    {
+        std::cout << "The next frequency is: " << nextFrequency << ".\n" << std::endl;
+        return{};
+    }
 };
 
 void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float loadTimeOffset)
@@ -143,7 +145,9 @@ void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float lo
     if((currentWavetable != wavetableToLoad) && (loadTimeOffset > 0))
     {
         currentWavetable = wavetableToLoad;
+        std::cout << "You just loaded wavetable: " << currentWavetable << ".\n" << std::endl;
     }
+    else std::cout << "Unable to load wavetable!\n" << std::endl;
 }
 /*
  3)
@@ -176,7 +180,7 @@ void ADSREnvelope::playNoteOnTrigger(ADSREnvelope newEnvelope)
 
 void ADSREnvelope::playNote()
 {
-    std::cout << "Playing note! Your ADSR Values are:\nAttack: " << attack << "\nDecay: " << decay << "\nSustain: " << sustain << "\nRelease " << release << std::endl;
+    std::cout << "Playing note! Your ADSR Values are:\nAttack: " << attack << "\nDecay: " << decay << "\nSustain: " << sustain << "\nRelease: " << release << ".\n" << std::endl;
 }
 /*
  4)
@@ -204,11 +208,13 @@ int Reverb::setNextReverbSettings(Reverb newVerbSettings)
     Reverb oldVerbSettings;
     if(newVerbSettings.decayTime == oldVerbSettings.decayTime)
     {
-        decayTime = 1;
+        decayTime = 0;
+        std::cout << "Setting reverb decay time to: " << decayTime << ".\n" << std::endl;
     }
     else
     {
         newVerbSettings.decayTime = oldVerbSettings.decayTime;
+        std::cout << "Setting reverb decay time to old verb settings: (" << newVerbSettings.decayTime << ").\n\n" << std::endl;
     }
     return {};
 }
@@ -239,7 +245,9 @@ void Equalizer::disableEqualizer(Equalizer changeThisEQ)
     if(changeThisEQ.enableEQ == 1)
     {
         changeThisEQ.enableEQ = 0;
+        std::cout << "Disabling EQ!\n" << std::endl;
     }
+    else std::cout << "Cannot disable EQ... EQ is already disabled!\n" << std::endl;
 }
 /*
  6)
@@ -259,10 +267,10 @@ struct Delay
         pingPong = false;
     }
 
-    void copySettingsToAllOfSameType(Delay defaultDelay, bool shouldOverride);
+    void copySettingsToAllOfSameType(Delay);
 };
 
-void Delay::copySettingsToAllOfSameType(Delay settingsToCopy, bool)
+void Delay::copySettingsToAllOfSameType(Delay settingsToCopy)
 {
     Delay myDelay;
 
@@ -270,6 +278,8 @@ void Delay::copySettingsToAllOfSameType(Delay settingsToCopy, bool)
     myDelay.feedback = settingsToCopy.feedback;
     myDelay.delayRate = settingsToCopy.delayRate;
     myDelay.pingPong = settingsToCopy.pingPong;
+
+    std::cout << "Your new delay settings are: bpmSync = " << myDelay.bpmSync << ", feedback = " << myDelay.feedback << ", delayRate = " << myDelay.delayRate << ", pingPong = " << myDelay.pingPong << ".\n" << std::endl;
 }
 /*
  7)
@@ -289,7 +299,10 @@ void Synthesizer::playSound(Synthesizer, float, bool)
     startSound();
 }
 
-void Synthesizer::startSound(){}
+void Synthesizer::startSound()
+{
+    std::cout << "The Synthesizer has started  to produce sound.\n" << std::endl;
+}
 /*
  8)
  */
@@ -316,9 +329,10 @@ float SimpleLooper::createLoopPoint(float newStart, float newEnd)
     myLoop.startLooping(newStart, newEnd);
     return {};
 }
-void SimpleLooper::startLooping(float startPoint, float endPoint){
-    startPoint = loopStartPoint;
-    endPoint = loopEndPoint;
+void SimpleLooper::startLooping(float startPoint, float endPoint)
+{
+    float loopLength = endPoint - startPoint;
+    std::cout << "Your new loop length is: " << loopLength << " seconds.\n" << std::endl;
 }
 /*
  9)
@@ -349,7 +363,11 @@ struct Bank
             totalAssetsHeld = 15;
         }
 
-        int getLastDepositAmount(PersonalAccount myAccount, float lastDepositTime);
+        float getValueOfAccount(PersonalAccount thisAccount)
+        {
+        std::cout << "The value of this account is: " << thisAccount.valueOfAccount << ".\n" << std::endl;
+        return thisAccount.valueOfAccount;
+        }
     };
 
     void payOffLoans(Bank chase, PersonalAccount newAccount);
@@ -361,7 +379,7 @@ void Bank::payOffLoans(Bank chase, PersonalAccount tristanAccount)
     {
         chase.totalMoney += tristanAccount.valueOfAccount;
         tristanAccount.valueOfAccount = 0;
-        std::cout << "\nThank you for your payment, but you STILL owe more! Current balance is: " << tristanAccount.valueOfAccount << "." << std::endl;
+        std::cout << "\nThank you for your payment, but you STILL owe more! Current balance is: " << tristanAccount.valueOfAccount << ".\n" << std::endl;
     }
     else
     {
@@ -401,7 +419,10 @@ struct SearchEngine
         void show();
         void clearSearchEngine();
     };
-    SearchEngine(char recentlySearchedAddress);
+    void openNewBrowserWindow(int totalNewWindows, float height, float width)
+    {
+        std::cout << "You want to open " << totalNewWindows << " windows. Their width will be: " << width << ", and their height will be: " << height << ".\n" << std::endl;
+    }
 };
 
 char SearchEngine::SearchBar::showBookmarks(int totalBookmarks)
@@ -419,7 +440,10 @@ char SearchEngine::SearchBar::showBookmarks(int totalBookmarks)
     return {};
 }
 void SearchEngine::SearchBar::show(){}
-void SearchEngine::SearchBar::clearSearchEngine(){}
+void SearchEngine::SearchBar::clearSearchEngine()
+{
+    std::cout << "SearchEngine has been cleared!\n" << std::endl;
+}
 
 #include <iostream>
 int main()
@@ -430,6 +454,7 @@ int main()
     WavetableOscillator myWavetableOsc;
     WavetableOscillator::Wavetable myWavetable;
     Reverb myReverb;
+    Reverb myOldReverb;
     Equalizer myEqualizer;
     Delay myDelay;
     Synthesizer mySynth;
@@ -441,9 +466,19 @@ int main()
     ADSREnvelope myEnvelope;
    
     myEnvelope.playNote(); 
+    myKnob.spawnKnob(10, 5.f);
+    myWavetableOsc.getNextFrequencyInSequence(150.55f);
+    myWavetable.loadWavetable(0, 1);
+    myReverb.setNextReverbSettings(myOldReverb);
+    myEqualizer.disableEqualizer(myEqualizer);
+    myDelay.copySettingsToAllOfSameType(myDelay);
+    mySynth.startSound();
+    looper.startLooping(15.f, 20.f);
     myFilter.updateKnobPosition(myKnob, 5.3);
     localBank.payOffLoans(localBank, tristanAccount);
-
+    tristanAccount.getValueOfAccount(tristanAccount);
+    mySearchEngine.openNewBrowserWindow(5, 3.5f, 5.35f);
+    mySearchBar.clearSearchEngine();
    // Example::main();
    // std::cout << "good to go!" << std::endl;
 }
