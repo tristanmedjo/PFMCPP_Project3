@@ -166,7 +166,7 @@ int Reverb::setNextReverbSettings(Reverb newVerbSettings)
     {
         newVerbSettings.decayTime = oldVerbSettings.decayTime;
     }
-    return{};
+    return {};
 }
 
 /*
@@ -248,7 +248,7 @@ float SimpleLooper::createLoopPoint(float newStart, float newEnd)
 {
     SimpleLooper myLoop; // When I had SimpleLooper(int audioClipList) above, it was causing "no matching constructor for initialization of myLoop"
     myLoop.startLooping(newStart, newEnd);
-    return{};
+    return {};
 }
 void SimpleLooper::startLooping(float startPoint, float endPoint){
     startPoint = loopStartPoint;
@@ -321,7 +321,7 @@ char SearchEngine::SearchBar::showBookmarks(int totalBookmarks)
     {
         mySearchBar.show();
     }
-    return{};
+    return {};
 }
 void SearchEngine::SearchBar::show(){}
 void SearchEngine::SearchBar::clearSearchEngine(){}
