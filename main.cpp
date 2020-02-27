@@ -12,9 +12,42 @@ Create a branch named Part2
     You'll need to insert the Person struct from the video in the space below.
  */
 
+struct Person
+{
+    int distanceTraveled;
+    void run(int howFast, bool startWithLeftFoot);
+    void stepForward(int howFar, int howFast);
+    
+    struct Foot
+    {
+        int stepSize();
+        void stepForward();
+    };
+};
 
+void Person::run(int, bool startWithLeftFoot)
+{   
+    Foot rightFoot;
+    Foot leftFoot;
 
+    if(startWithLeftFoot == true)
+    {
+        leftFoot.stepForward();
+        rightFoot.stepForward();
+    }
+    else
+    {
+        rightFoot.stepForward();
+        leftFoot.stepForward();
+    }
+    distanceTraveled += leftFoot.stepSize() + rightFoot.stepSize();
+}
 
+int Person::Foot::stepSize()
+{
+    return{};
+}
+void Person::Foot::stepForward(){}
 
  /*
  2) provide implementations for the member functions you declared in your 10 user-defined types from the previous video outside of your UDT definitions.
@@ -36,8 +69,8 @@ send me a DM to check your pull request
 /*
  1)
  */
- struct Filter
- {
+struct Filter
+{
     double frequency = 4000.0;
     int filterType = 2;
     float dryWet = 1.0f;
@@ -48,16 +81,26 @@ send me a DM to check your pull request
         bool knobOverride = false;
         int color = 1;
 
-        void spawnKnobs(int numberOfKnobs, float knobLocation);
+        void spawnKnob(int numberOfKnobs, float knobLocation);
     };
 
     void updateKnobPosition(FilterKnob knobOne, double nextKnobPosition);
 };
+
+void Filter::FilterKnob::spawnKnob(int numberOfKnobs, float knobLocation)
+{
+    FilterKnob newKnob;
+
+    if(numberOfKnobs > 0)
+    {
+        newKnob.spawnKnob(numberOfKnobs, knobLocation);
+    }
+}
 /*
  2)
  */
- struct WavetableOscillator
- {
+struct WavetableOscillator
+{
     double frequency = 4000.0;
     int waveShape = 2;
     float volumeLevel = 1.0f;
@@ -66,12 +109,20 @@ send me a DM to check your pull request
     {   
         int maxNumberOfWaveforms = 100;
         bool interpolationOn = true;
-
+        int currentWavetable = 0;
         void loadWavetable(int wavetableToLoad, float loadTimeOffset);
     };
 
     int getNextFrequencyInSequence(float nextFrequency);
- };
+};
+
+void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float loadTimeOffset)
+{
+    if((currentWavetable != wavetableToLoad) && (loadTimeOffset > 0))
+    {
+        currentWavetable = wavetableToLoad;
+    }
+}
 /*
  3)
  */
@@ -82,9 +133,16 @@ struct ADSREnvelope
     float sustain = 1.f;
     float release =2.4f;
     bool isMidiControlEnabled = true;
-
+    void playNote();
     void playNoteOnTrigger(ADSREnvelope myEnvelope);
 };
+
+void ADSREnvelope::playNoteOnTrigger(ADSREnvelope newEnvelope)
+{
+    newEnvelope.playNote();
+}
+
+void ADSREnvelope::playNote(){}
 /*
  4)
  */
@@ -94,9 +152,23 @@ struct Reverb
     float roomSize;
     double inputVolume;
     double outputVolume;
-
-    int setNextReverbSettings(Reverb defaultVerbSettings);
+    int setNextReverbSettings(Reverb newVerbSettings);
 };
+
+int Reverb::setNextReverbSettings(Reverb newVerbSettings)
+{
+    Reverb oldVerbSettings;
+    if(newVerbSettings.decayTime == oldVerbSettings.decayTime)
+    {
+        decayTime = 1;
+    }
+    else
+    {
+        newVerbSettings.decayTime = oldVerbSettings.decayTime;
+    }
+    return {};
+}
+
 /*
  5)
  */
@@ -105,9 +177,18 @@ struct Equalizer
     double frequency = 2000.19;
     float equalizerQ = 1.f;
     float gain = 0.5f;
+    int enableEQ = 1;
     
     void disableEqualizer(Equalizer defaultEQ);
 };
+
+void Equalizer::disableEqualizer(Equalizer changeThisEQ)
+{
+    if(changeThisEQ.enableEQ == 1)
+    {
+        changeThisEQ.enableEQ = 0;
+    }
+}
 /*
  6)
  */
@@ -120,6 +201,16 @@ struct Delay
 
     void copySettingsToAllOfSameType(Delay defaultDelay, bool shouldOverride);
 };
+
+void Delay::copySettingsToAllOfSameType(Delay settingsToCopy, bool)
+{
+    Delay myDelay;
+
+    myDelay.bpmSync = settingsToCopy.bpmSync;
+    myDelay.feedback = settingsToCopy.feedback;
+    myDelay.delayRate = settingsToCopy.delayRate;
+    myDelay.pingPong = settingsToCopy.pingPong;
+}
 /*
  7)
  */
@@ -130,7 +221,15 @@ struct Synthesizer
     ADSREnvelope defaultEnvelope;
 
     void playSound(Synthesizer mySynth, float durationLength, bool pitchGlideEnabled);
+    void startSound();
 };
+
+void Synthesizer::playSound(Synthesizer, float, bool)
+{
+    startSound();
+}
+
+void Synthesizer::startSound(){}
 /*
  8)
  */
@@ -140,8 +239,21 @@ struct SimpleLooper
     float loopEndPoint = 10.f;
     bool shouldLoop = true;
 
-    SimpleLooper(int audioClipList);
+    //SimpleLooper(int audioClipList); this was the original member function, but I am not sure how to call it below. I know we need to specify the type, but since there is no type, how would this work? I am adding a new function for now. ALSO, this function was causing problems with declaring a type, comment down below
+    float createLoopPoint(float startPoint, float endPoint);
+    void startLooping(float startPoint, float endPoint);
 };
+
+float SimpleLooper::createLoopPoint(float newStart, float newEnd)
+{
+    SimpleLooper myLoop; // When I had SimpleLooper(int audioClipList) above, it was causing "no matching constructor for initialization of myLoop"
+    myLoop.startLooping(newStart, newEnd);
+    return {};
+}
+void SimpleLooper::startLooping(float startPoint, float endPoint){
+    startPoint = loopStartPoint;
+    endPoint = loopEndPoint;
+}
 /*
  9)
  */
@@ -162,6 +274,19 @@ struct Bank
 
     void payOffLoans(Bank chase, PersonalAccount newAccount);
 };
+
+void Bank::payOffLoans(Bank chase, PersonalAccount tristanAccount)
+{
+    if(tristanAccount.valueOfAccount > 1000.f)
+    {
+        chase.totalMoney += tristanAccount.valueOfAccount;
+        tristanAccount.valueOfAccount = 0;
+    }
+    else
+    {
+        chase.yearlyInterestRate += 0.1f;
+    }
+}
 /*
  10)
  */
@@ -178,10 +303,28 @@ struct SearchEngine
         bool searchEnabled = true;
 
         char showBookmarks(int totalBookmarks);
+        void show();
+        void clearSearchEngine();
     };
-
     SearchEngine(char recentlySearchedAddress);
 };
+
+char SearchEngine::SearchBar::showBookmarks(int totalBookmarks)
+{
+    SearchBar mySearchBar;
+
+    if(totalBookmarks == 0)
+    {
+        clearSearchEngine();
+    }
+    else
+    {
+        mySearchBar.show();
+    }
+    return {};
+}
+void SearchEngine::SearchBar::show(){}
+void SearchEngine::SearchBar::clearSearchEngine(){}
 
 #include <iostream>
 int main()
