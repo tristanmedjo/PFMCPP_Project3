@@ -58,15 +58,29 @@ int main()
  */
 struct Filter
 {
-    double frequency = 4000.0;
-    int filterType = 2;
-    float dryWet = 1.0f;
+    double frequency;
+    int filterType;
+    float dryWet;
+
+    Filter()
+    {
+        frequency = 4000.0;
+        filterType = 2;
+        dryWet = 1.0f;
+    }
 
     struct FilterKnob
     {
         float knobPosition;
-        bool knobOverride = false;
-        int color = 1;
+        bool knobOverride;
+        int knobID;
+
+        FilterKnob()
+        {
+            knobPosition = 1.0f;
+            knobOverride = false;
+            knobID = 1;
+        }
 
         void spawnKnob(int numberOfKnobs, float knobLocation);
     };
@@ -78,29 +92,52 @@ void Filter::FilterKnob::spawnKnob(int numberOfKnobs, float knobLocation)
 {
     FilterKnob newKnob;
 
-    if(numberOfKnobs > 0)
-    {
-        newKnob.spawnKnob(numberOfKnobs, knobLocation);
-    }
+    if(numberOfKnobs < 10) newKnob.spawnKnob(numberOfKnobs, knobLocation);
+    std::cout << "You are trying to spawn too many knobs at once!\n\n";
+}
+
+void Filter::updateKnobPosition(FilterKnob knobToUpdate, double nextKnobPosition)
+{
+    int knobID = knobToUpdate.knobID;
+    std::cout << "The knob to update is: " << knobID << ". The next knob position is: " << nextKnobPosition << "." << std::endl;
 }
 /*
  2)
  */
 struct WavetableOscillator
 {
-    double frequency = 4000.0;
-    int waveShape = 2;
-    float volumeLevel = 1.0f;
+    double frequency;
+    int waveShape;
+    float volumeLevel;
+
+    WavetableOscillator()
+    {
+        frequency = 4000.0;
+        waveShape = 2;
+        volumeLevel = 1.0f;
+    }
 
     struct Wavetable
     {   
-        int maxNumberOfWaveforms = 100;
-        bool interpolationOn = true;
-        int currentWavetable = 0;
+        int maxNumberOfWaveforms;
+        bool interpolationOn;
+        int currentWavetable;
+
+        Wavetable()
+        {
+            maxNumberOfWaveforms = 100;
+            interpolationOn = true;
+            currentWavetable = 0;
+        }
+
         void loadWavetable(int wavetableToLoad, float loadTimeOffset);
     };
 
-    int getNextFrequencyInSequence(float nextFrequency);
+    int getNextFrequencyInSequence(float nextFrequency)
+    {
+        std::cout << "The next frequency is: " << nextFrequency << ".\n" << std::endl;
+        return{};
+    }
 };
 
 void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float loadTimeOffset)
@@ -108,19 +145,31 @@ void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float lo
     if((currentWavetable != wavetableToLoad) && (loadTimeOffset > 0))
     {
         currentWavetable = wavetableToLoad;
+        std::cout << "You just loaded wavetable: " << currentWavetable << ".\n" << std::endl;
     }
+    else std::cout << "Unable to load wavetable!\n" << std::endl;
 }
 /*
  3)
  */
 struct ADSREnvelope
 {
-    double attack  = 2.0;
-    double decay = 2.0;
-    float sustain = 1.f;
-    float release =2.4f;
-    bool isMidiControlEnabled = true;
-    void playNote();
+    double attack;
+    double decay;
+    float sustain;
+    float release;
+    bool isMidiControlEnabled;
+
+    ADSREnvelope()
+    {
+        attack = 2.0;
+        decay = 2.0;
+        sustain = 1.f;
+        release =2.4f;
+        isMidiControlEnabled = true;
+    }
+
+    void playNote(); 
     void playNoteOnTrigger(ADSREnvelope myEnvelope);
 };
 
@@ -129,7 +178,10 @@ void ADSREnvelope::playNoteOnTrigger(ADSREnvelope newEnvelope)
     newEnvelope.playNote();
 }
 
-void ADSREnvelope::playNote(){}
+void ADSREnvelope::playNote()
+{
+    std::cout << "Playing note! Your ADSR Values are:\nAttack: " << attack << "\nDecay: " << decay << "\nSustain: " << sustain << "\nRelease: " << release << ".\n" << std::endl;
+}
 /*
  4)
  */
@@ -139,6 +191,15 @@ struct Reverb
     float roomSize;
     double inputVolume;
     double outputVolume;
+
+    Reverb()
+    {
+        decayTime = 1;
+        roomSize = 3.5f;
+        inputVolume = 1.0;
+        outputVolume = 1.0;
+    }
+    
     int setNextReverbSettings(Reverb newVerbSettings);
 };
 
@@ -147,11 +208,13 @@ int Reverb::setNextReverbSettings(Reverb newVerbSettings)
     Reverb oldVerbSettings;
     if(newVerbSettings.decayTime == oldVerbSettings.decayTime)
     {
-        decayTime = 1;
+        decayTime = 0;
+        std::cout << "Setting reverb decay time to: " << decayTime << ".\n" << std::endl;
     }
     else
     {
         newVerbSettings.decayTime = oldVerbSettings.decayTime;
+        std::cout << "Setting reverb decay time to old verb settings: (" << newVerbSettings.decayTime << ").\n\n" << std::endl;
     }
     return {};
 }
@@ -161,10 +224,18 @@ int Reverb::setNextReverbSettings(Reverb newVerbSettings)
  */
 struct Equalizer
 {
-    double frequency = 2000.19;
-    float equalizerQ = 1.f;
-    float gain = 0.5f;
-    int enableEQ = 1;
+    double frequency;
+    float equalizerQ;
+    float gain;
+    int enableEQ;
+
+    Equalizer()
+    {
+        frequency = 2000.19;
+        equalizerQ = 1.f;
+        gain = 0.5f;
+        enableEQ = 1;
+    }
     
     void disableEqualizer(Equalizer defaultEQ);
 };
@@ -174,22 +245,32 @@ void Equalizer::disableEqualizer(Equalizer changeThisEQ)
     if(changeThisEQ.enableEQ == 1)
     {
         changeThisEQ.enableEQ = 0;
+        std::cout << "Disabling EQ!\n" << std::endl;
     }
+    else std::cout << "Cannot disable EQ... EQ is already disabled!\n" << std::endl;
 }
 /*
  6)
  */
 struct Delay
 {
-    bool bpmSync = false;
-    float feedback = 50.f;
-    int delayRate = 1;
-    bool pingPong = false;
+    bool bpmSync;
+    float feedback;
+    int delayRate;
+    bool pingPong;
 
-    void copySettingsToAllOfSameType(Delay defaultDelay, bool shouldOverride);
+    Delay()
+    {
+        bpmSync = false;
+        feedback = 50.f;
+        delayRate = 1;
+        pingPong = false;
+    }
+
+    void copySettingsToAllOfSameType(Delay);
 };
 
-void Delay::copySettingsToAllOfSameType(Delay settingsToCopy, bool)
+void Delay::copySettingsToAllOfSameType(Delay settingsToCopy)
 {
     Delay myDelay;
 
@@ -197,6 +278,8 @@ void Delay::copySettingsToAllOfSameType(Delay settingsToCopy, bool)
     myDelay.feedback = settingsToCopy.feedback;
     myDelay.delayRate = settingsToCopy.delayRate;
     myDelay.pingPong = settingsToCopy.pingPong;
+
+    std::cout << "Your new delay settings are: bpmSync = " << myDelay.bpmSync << ", feedback = " << myDelay.feedback << ", delayRate = " << myDelay.delayRate << ", pingPong = " << myDelay.pingPong << ".\n" << std::endl;
 }
 /*
  7)
@@ -205,7 +288,7 @@ struct Synthesizer
 {
     WavetableOscillator oscillator;
     Filter combFilter;
-    ADSREnvelope defaultEnvelope;
+    ADSREnvelope defaultEnvelope; // I dont need to do any constructor here, since the UDT's I'm referencing already have constructors... correct?
 
     void playSound(Synthesizer mySynth, float durationLength, bool pitchGlideEnabled);
     void startSound();
@@ -216,47 +299,75 @@ void Synthesizer::playSound(Synthesizer, float, bool)
     startSound();
 }
 
-void Synthesizer::startSound(){}
+void Synthesizer::startSound()
+{
+    std::cout << "The Synthesizer has started  to produce sound.\n" << std::endl;
+}
 /*
  8)
  */
 struct SimpleLooper
 {
-    float loopStartPoint = 0.f;
-    float loopEndPoint = 10.f;
-    bool shouldLoop = true;
+    float loopStartPoint;
+    float loopEndPoint;
+    bool shouldLoop;
 
-    //SimpleLooper(int audioClipList); this was the original member function, but I am not sure how to call it below. I know we need to specify the type, but since there is no type, how would this work? I am adding a new function for now. ALSO, this function was causing problems with declaring a type, comment down below
+    SimpleLooper()
+    {
+        loopStartPoint = 0.f;
+        loopEndPoint = 10.f;
+        shouldLoop = true;
+    }
+
     float createLoopPoint(float startPoint, float endPoint);
     void startLooping(float startPoint, float endPoint);
 };
 
 float SimpleLooper::createLoopPoint(float newStart, float newEnd)
 {
-    SimpleLooper myLoop; // When I had SimpleLooper(int audioClipList) above, it was causing "no matching constructor for initialization of myLoop"
+    SimpleLooper myLoop;
     myLoop.startLooping(newStart, newEnd);
     return {};
 }
-void SimpleLooper::startLooping(float startPoint, float endPoint){
-    startPoint = loopStartPoint;
-    endPoint = loopEndPoint;
+void SimpleLooper::startLooping(float startPoint, float endPoint)
+{
+    float loopLength = endPoint - startPoint;
+    std::cout << "Your new loop length is: " << loopLength << " seconds.\n" << std::endl;
 }
 /*
  9)
  */
 struct Bank
 {
-    float totalMoney = 100000000.f; // 100,000,000
-    bool canLoanMoney = true;
-    float yearlyInterestRate = 4.0f;
+    float totalMoney; // 100,000,000
+    bool canLoanMoney;
+    float yearlyInterestRate;
+
+    Bank()
+    {
+        totalMoney = 100000000.f; 
+        canLoanMoney = true;
+        yearlyInterestRate = 4.0f;
+    }
     
     struct PersonalAccount
     {
-        float valueOfAccount = 50000.f;
-        bool owesMoney = true;
-        int totalAssetsHeld = 15;
+        float valueOfAccount;
+        bool owesMoney;
+        int totalAssetsHeld;
 
-        int getLastDepositAmount(PersonalAccount myAccount, float lastDepositTime);
+        PersonalAccount()
+        {
+            valueOfAccount = 50000.f;
+            owesMoney = true;
+            totalAssetsHeld = 15;
+        }
+
+        float getValueOfAccount(PersonalAccount thisAccount)
+        {
+        std::cout << "The value of this account is: " << thisAccount.valueOfAccount << ".\n" << std::endl;
+        return thisAccount.valueOfAccount;
+        }
     };
 
     void payOffLoans(Bank chase, PersonalAccount newAccount);
@@ -268,6 +379,7 @@ void Bank::payOffLoans(Bank chase, PersonalAccount tristanAccount)
     {
         chase.totalMoney += tristanAccount.valueOfAccount;
         tristanAccount.valueOfAccount = 0;
+        std::cout << "\nThank you for your payment, but you STILL owe more! Current balance is: " << tristanAccount.valueOfAccount << ".\n" << std::endl;
     }
     else
     {
@@ -279,21 +391,38 @@ void Bank::payOffLoans(Bank chase, PersonalAccount tristanAccount)
  */
 struct SearchEngine
 {
-    int totalSearches = 50;
-    int totalAdsBlocked = 100;
-    bool accountLoggedIn = false;
+    int totalSearches;
+    int totalAdsBlocked;
+    bool accountLoggedIn;
+
+    SearchEngine()
+    {
+        totalSearches = 50;
+        totalAdsBlocked = 100;
+        accountLoggedIn = false;
+    }
 
     struct SearchBar
     {
-        float widthOfSearchBar = 100.f;
-        float heightOfSearchBar = 5.f;
-        bool searchEnabled = true;
+        float widthOfSearchBar;
+        float heightOfSearchBar;
+        bool searchEnabled;
+
+        SearchBar()
+        {
+            widthOfSearchBar = 100.f;
+            heightOfSearchBar = 5.f;
+            searchEnabled = true;
+        }
 
         char showBookmarks(int totalBookmarks);
         void show();
         void clearSearchEngine();
     };
-    SearchEngine(char recentlySearchedAddress);
+    void openNewBrowserWindow(int totalNewWindows, float height, float width)
+    {
+        std::cout << "You want to open " << totalNewWindows << " windows. Their width will be: " << width << ", and their height will be: " << height << ".\n" << std::endl;
+    }
 };
 
 char SearchEngine::SearchBar::showBookmarks(int totalBookmarks)
@@ -311,11 +440,45 @@ char SearchEngine::SearchBar::showBookmarks(int totalBookmarks)
     return {};
 }
 void SearchEngine::SearchBar::show(){}
-void SearchEngine::SearchBar::clearSearchEngine(){}
+void SearchEngine::SearchBar::clearSearchEngine()
+{
+    std::cout << "SearchEngine has been cleared!\n" << std::endl;
+}
 
 #include <iostream>
 int main()
-{
+{ 
+    
+    Filter myFilter;
+    Filter::FilterKnob myKnob;
+    WavetableOscillator myWavetableOsc;
+    WavetableOscillator::Wavetable myWavetable;
+    Reverb myReverb;
+    Reverb myOldReverb;
+    Equalizer myEqualizer;
+    Delay myDelay;
+    Synthesizer mySynth;
+    SimpleLooper looper;
+    SearchEngine mySearchEngine;
+    SearchEngine::SearchBar mySearchBar;
+    Bank localBank;
+    Bank::PersonalAccount tristanAccount;
+    ADSREnvelope myEnvelope;
+   
+    myEnvelope.playNote(); 
+    myKnob.spawnKnob(10, 5.f);
+    myWavetableOsc.getNextFrequencyInSequence(150.55f);
+    myWavetable.loadWavetable(0, 1);
+    myReverb.setNextReverbSettings(myOldReverb);
+    myEqualizer.disableEqualizer(myEqualizer);
+    myDelay.copySettingsToAllOfSameType(myDelay);
+    mySynth.startSound();
+    looper.startLooping(15.f, 20.f);
+    myFilter.updateKnobPosition(myKnob, 5.3);
+    localBank.payOffLoans(localBank, tristanAccount);
+    tristanAccount.getValueOfAccount(tristanAccount);
+    mySearchEngine.openNewBrowserWindow(5, 3.5f, 5.35f);
+    mySearchBar.clearSearchEngine();
     Example::main();
     std::cout << "good to go!" << std::endl;
 }
