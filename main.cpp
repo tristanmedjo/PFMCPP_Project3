@@ -479,6 +479,6 @@ int main()
     tristanAccount.getValueOfAccount(tristanAccount);
     mySearchEngine.openNewBrowserWindow(5, 3.5f, 5.35f);
     mySearchBar.clearSearchEngine();
-   // Example::main();
-   // std::cout << "good to go!" << std::endl;
+    Example::main();
+    std::cout << "good to go!" << std::endl;
 }
