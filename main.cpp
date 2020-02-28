@@ -57,12 +57,8 @@ struct Filter
     int filterType;
     float dryWet;
 
-    Filter()
-    {
-        frequency = 4000.0;
-        filterType = 2;
-        dryWet = 1.0f;
-    }
+    Filter() : frequency(4000.0), filterType(2), dryWet (1.0f) {}
+
 
     struct FilterKnob
     {
@@ -105,12 +101,7 @@ struct WavetableOscillator
     int waveShape;
     float volumeLevel;
 
-    WavetableOscillator()
-    {
-        frequency = 4000.0;
-        waveShape = 2;
-        volumeLevel = 1.0f;
-    }
+    WavetableOscillator() : frequency(4000.0), waveShape(2), volumeLevel(1.0f) {}
 
     struct Wavetable
     {   
@@ -149,20 +140,11 @@ void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float lo
  */
 struct ADSREnvelope
 {
-    double attack;
-    double decay;
-    float sustain;
-    float release;
-    bool isMidiControlEnabled;
-
-    ADSREnvelope()
-    {
-        attack = 2.0;
-        decay = 2.0;
-        sustain = 1.f;
-        release =2.4f;
-        isMidiControlEnabled = true;
-    }
+    double attack = 2.0;
+    double decay = 2.0;
+    float sustain = 1.f;
+    float release = 2.4f;
+    bool isMidiControlEnabled = true;
 
     void playNote(); 
     void playNoteOnTrigger(ADSREnvelope myEnvelope);
@@ -182,19 +164,11 @@ void ADSREnvelope::playNote()
  */
 struct Reverb
 {
-    int decayTime;
-    float roomSize;
-    double inputVolume;
-    double outputVolume;
+    int decayTime = 1;
+    float roomSize = 3.5f;
+    double inputVolume = 1.0;
+    double outputVolume = 1.0;
 
-    Reverb()
-    {
-        decayTime = 1;
-        roomSize = 3.5f;
-        inputVolume = 1.0;
-        outputVolume = 1.0;
-    }
-    
     int setNextReverbSettings(Reverb newVerbSettings);
 };
 
@@ -224,13 +198,7 @@ struct Equalizer
     float gain;
     int enableEQ;
 
-    Equalizer()
-    {
-        frequency = 2000.19;
-        equalizerQ = 1.f;
-        gain = 0.5f;
-        enableEQ = 1;
-    }
+    Equalizer() : frequency(2000.19), equalizerQ(1.f), gain(0.5f), enableEQ(1) {}
     
     void disableEqualizer(Equalizer defaultEQ);
 };
@@ -254,13 +222,7 @@ struct Delay
     int delayRate;
     bool pingPong;
 
-    Delay()
-    {
-        bpmSync = false;
-        feedback = 50.f;
-        delayRate = 1;
-        pingPong = false;
-    }
+    Delay() : bpmSync(false), feedback(50.f), delayRate(1), pingPong(false) {}
 
     void copySettingsToAllOfSameType(Delay);
 };
@@ -303,16 +265,9 @@ void Synthesizer::startSound()
  */
 struct SimpleLooper
 {
-    float loopStartPoint;
-    float loopEndPoint;
-    bool shouldLoop;
-
-    SimpleLooper()
-    {
-        loopStartPoint = 0.f;
-        loopEndPoint = 10.f;
-        shouldLoop = true;
-    }
+    float loopStartPoint = 0.f;
+    float loopEndPoint = 10.f;
+    bool shouldLoop = true;
 
     float createLoopPoint(float startPoint, float endPoint);
     void startLooping(float startPoint, float endPoint);
@@ -338,12 +293,7 @@ struct Bank
     bool canLoanMoney;
     float yearlyInterestRate;
 
-    Bank()
-    {
-        totalMoney = 100000000.f; 
-        canLoanMoney = true;
-        yearlyInterestRate = 4.0f;
-    }
+    Bank() : totalMoney(100000000.f), canLoanMoney(true), yearlyInterestRate(4.0f) {}
     
     struct PersonalAccount
     {
@@ -474,6 +424,6 @@ int main()
     tristanAccount.getValueOfAccount(tristanAccount);
     mySearchEngine.openNewBrowserWindow(5, 3.5f, 5.35f);
     mySearchBar.clearSearchEngine();
-    Example::main();
-    std::cout << "good to go!" << std::endl;
+   // Example::main();
+   // std::cout << "good to go!" << std::endl;
 }
