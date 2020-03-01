@@ -90,7 +90,8 @@ void Filter::FilterKnob::spawnKnob(int numberOfKnobs, float knobLocation)
 void Filter::updateKnobPosition(FilterKnob knobToUpdate, double nextKnobPosition)
 {
     int knobID = knobToUpdate.knobID;
-    std::cout << "The knob to update is: " << knobID << ". The next knob position is: " << nextKnobPosition << "." << std::endl;
+    std::cout << "The knob to update is: " << knobID << ". The next knob position is: " << nextKnobPosition << ".\n" << std::endl;
+    std::cout << "Your filter frequency is:" << frequency << std::endl;
 }
 /*
  2)
@@ -122,6 +123,8 @@ struct WavetableOscillator
     int getNextFrequencyInSequence(float nextFrequency)
     {
         std::cout << "The next frequency is: " << nextFrequency << ".\n" << std::endl;
+
+        std::cout << "Waveshape is: " << waveShape << ". Volume Level is: " << volumeLevel << ".\n" << std::endl;
         return{};
     }
 };
@@ -209,6 +212,7 @@ void Equalizer::disableEqualizer(Equalizer changeThisEQ)
     {
         changeThisEQ.enableEQ = 0;
         std::cout << "Disabling EQ!\n" << std::endl;
+        std::cout << "EQ Settings: Frequency: " << frequency << ". EqualizerQ: " << equalizerQ << ". Gain: " << gain << ". EnableEQ: " << enableEQ << ".\n" << std::endl;
     }
     else std::cout << "Cannot disable EQ... EQ is already disabled!\n" << std::endl;
 }
@@ -283,6 +287,7 @@ void SimpleLooper::startLooping(float startPoint, float endPoint)
 {
     float loopLength = endPoint - startPoint;
     std::cout << "Your new loop length is: " << loopLength << " seconds.\n" << std::endl;
+    std::cout << "SimpleLooper Values: loopStartPoint: " << loopStartPoint << ". loopEndPoint: " << loopEndPoint << ". shouldLoop: " << shouldLoop << ".\n" << std::endl;
 }
 /*
  9)
@@ -325,6 +330,8 @@ void Bank::payOffLoans(Bank chase, PersonalAccount tristanAccount)
         chase.totalMoney += tristanAccount.valueOfAccount;
         tristanAccount.valueOfAccount = 0;
         std::cout << "\nThank you for your payment, but you STILL owe more! Current balance is: " << tristanAccount.valueOfAccount << ".\n" << std::endl;
+
+        std::cout << "Bank values: totalMoney: " << totalMoney << ". canLoanMoney: " << canLoanMoney << ". yearlyInterestRate: " << yearlyInterestRate << ".\n";
     }
     else
     {
@@ -384,7 +391,10 @@ char SearchEngine::SearchBar::showBookmarks(int totalBookmarks)
     }
     return {};
 }
-void SearchEngine::SearchBar::show(){}
+void SearchEngine::SearchBar::show()
+{
+    std::cout << "SearchEngine and SearchBar Values: widthOfSearchBar: " << widthOfSearchBar << ". heightOfSearchBar: " <<heightOfSearchBar << ". searchEnabled: " << searchEnabled << ". widthOfSearchBar: " << widthOfSearchBar << "heightOfSearchBar: " << heightOfSearchBar << ". searchEnabled: " << searchEnabled << ".\n" << std::endl; 
+}
 void SearchEngine::SearchBar::clearSearchEngine()
 {
     std::cout << "SearchEngine has been cleared!\n" << std::endl;
