@@ -57,12 +57,8 @@ struct Filter
     int filterType;
     float dryWet;
 
-    Filter()
-    {
-        frequency = 4000.0;
-        filterType = 2;
-        dryWet = 1.0f;
-    }
+    Filter() : frequency(4000.0), filterType(2), dryWet (1.0f) {}
+
 
     struct FilterKnob
     {
@@ -94,7 +90,8 @@ void Filter::FilterKnob::spawnKnob(int numberOfKnobs, float knobLocation)
 void Filter::updateKnobPosition(FilterKnob knobToUpdate, double nextKnobPosition)
 {
     int knobID = knobToUpdate.knobID;
-    std::cout << "The knob to update is: " << knobID << ". The next knob position is: " << nextKnobPosition << "." << std::endl;
+    std::cout << "The knob to update is: " << knobID << ". The next knob position is: " << nextKnobPosition << ".\n" << std::endl;
+    std::cout << "Your filter frequency is:" << frequency << std::endl;
 }
 /*
  2)
@@ -105,12 +102,7 @@ struct WavetableOscillator
     int waveShape;
     float volumeLevel;
 
-    WavetableOscillator()
-    {
-        frequency = 4000.0;
-        waveShape = 2;
-        volumeLevel = 1.0f;
-    }
+    WavetableOscillator() : frequency(4000.0), waveShape(2), volumeLevel(1.0f) {}
 
     struct Wavetable
     {   
@@ -131,6 +123,8 @@ struct WavetableOscillator
     int getNextFrequencyInSequence(float nextFrequency)
     {
         std::cout << "The next frequency is: " << nextFrequency << ".\n" << std::endl;
+
+        std::cout << "Waveshape is: " << waveShape << ". Volume Level is: " << volumeLevel << ".\n" << std::endl;
         return{};
     }
 };
@@ -149,20 +143,11 @@ void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float lo
  */
 struct ADSREnvelope
 {
-    double attack;
-    double decay;
-    float sustain;
-    float release;
-    bool isMidiControlEnabled;
-
-    ADSREnvelope()
-    {
-        attack = 2.0;
-        decay = 2.0;
-        sustain = 1.f;
-        release =2.4f;
-        isMidiControlEnabled = true;
-    }
+    double attack = 2.0;
+    double decay = 2.0;
+    float sustain = 1.f;
+    float release = 2.4f;
+    bool isMidiControlEnabled = true;
 
     void playNote(); 
     void playNoteOnTrigger(ADSREnvelope myEnvelope);
@@ -182,19 +167,11 @@ void ADSREnvelope::playNote()
  */
 struct Reverb
 {
-    int decayTime;
-    float roomSize;
-    double inputVolume;
-    double outputVolume;
+    int decayTime = 1;
+    float roomSize = 3.5f;
+    double inputVolume = 1.0;
+    double outputVolume = 1.0;
 
-    Reverb()
-    {
-        decayTime = 1;
-        roomSize = 3.5f;
-        inputVolume = 1.0;
-        outputVolume = 1.0;
-    }
-    
     int setNextReverbSettings(Reverb newVerbSettings);
 };
 
@@ -224,13 +201,7 @@ struct Equalizer
     float gain;
     int enableEQ;
 
-    Equalizer()
-    {
-        frequency = 2000.19;
-        equalizerQ = 1.f;
-        gain = 0.5f;
-        enableEQ = 1;
-    }
+    Equalizer() : frequency(2000.19), equalizerQ(1.f), gain(0.5f), enableEQ(1) {}
     
     void disableEqualizer(Equalizer defaultEQ);
 };
@@ -241,6 +212,7 @@ void Equalizer::disableEqualizer(Equalizer changeThisEQ)
     {
         changeThisEQ.enableEQ = 0;
         std::cout << "Disabling EQ!\n" << std::endl;
+        std::cout << "EQ Settings: Frequency: " << frequency << ". EqualizerQ: " << equalizerQ << ". Gain: " << gain << ". EnableEQ: " << enableEQ << ".\n" << std::endl;
     }
     else std::cout << "Cannot disable EQ... EQ is already disabled!\n" << std::endl;
 }
@@ -254,13 +226,7 @@ struct Delay
     int delayRate;
     bool pingPong;
 
-    Delay()
-    {
-        bpmSync = false;
-        feedback = 50.f;
-        delayRate = 1;
-        pingPong = false;
-    }
+    Delay() : bpmSync(false), feedback(50.f), delayRate(1), pingPong(false) {}
 
     void copySettingsToAllOfSameType(Delay);
 };
@@ -303,16 +269,9 @@ void Synthesizer::startSound()
  */
 struct SimpleLooper
 {
-    float loopStartPoint;
-    float loopEndPoint;
-    bool shouldLoop;
-
-    SimpleLooper()
-    {
-        loopStartPoint = 0.f;
-        loopEndPoint = 10.f;
-        shouldLoop = true;
-    }
+    float loopStartPoint = 0.f;
+    float loopEndPoint = 10.f;
+    bool shouldLoop = true;
 
     float createLoopPoint(float startPoint, float endPoint);
     void startLooping(float startPoint, float endPoint);
@@ -328,6 +287,7 @@ void SimpleLooper::startLooping(float startPoint, float endPoint)
 {
     float loopLength = endPoint - startPoint;
     std::cout << "Your new loop length is: " << loopLength << " seconds.\n" << std::endl;
+    std::cout << "SimpleLooper Values: loopStartPoint: " << loopStartPoint << ". loopEndPoint: " << loopEndPoint << ". shouldLoop: " << shouldLoop << ".\n" << std::endl;
 }
 /*
  9)
@@ -338,12 +298,7 @@ struct Bank
     bool canLoanMoney;
     float yearlyInterestRate;
 
-    Bank()
-    {
-        totalMoney = 100000000.f; 
-        canLoanMoney = true;
-        yearlyInterestRate = 4.0f;
-    }
+    Bank() : totalMoney(100000000.f), canLoanMoney(true), yearlyInterestRate(4.0f) {}
     
     struct PersonalAccount
     {
@@ -375,6 +330,8 @@ void Bank::payOffLoans(Bank chase, PersonalAccount tristanAccount)
         chase.totalMoney += tristanAccount.valueOfAccount;
         tristanAccount.valueOfAccount = 0;
         std::cout << "\nThank you for your payment, but you STILL owe more! Current balance is: " << tristanAccount.valueOfAccount << ".\n" << std::endl;
+
+        std::cout << "Bank values: totalMoney: " << totalMoney << ". canLoanMoney: " << canLoanMoney << ". yearlyInterestRate: " << yearlyInterestRate << ".\n";
     }
     else
     {
@@ -434,7 +391,10 @@ char SearchEngine::SearchBar::showBookmarks(int totalBookmarks)
     }
     return {};
 }
-void SearchEngine::SearchBar::show(){}
+void SearchEngine::SearchBar::show()
+{
+    std::cout << "SearchEngine and SearchBar Values: widthOfSearchBar: " << widthOfSearchBar << ". heightOfSearchBar: " <<heightOfSearchBar << ". searchEnabled: " << searchEnabled << ". widthOfSearchBar: " << widthOfSearchBar << "heightOfSearchBar: " << heightOfSearchBar << ". searchEnabled: " << searchEnabled << ".\n" << std::endl; 
+}
 void SearchEngine::SearchBar::clearSearchEngine()
 {
     std::cout << "SearchEngine has been cleared!\n" << std::endl;
