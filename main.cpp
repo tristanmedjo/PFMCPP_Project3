@@ -106,7 +106,34 @@ struct Filter
     };
 
     void updateKnobPosition(FilterKnob knobOne, double nextKnobPosition);
+    double transitionToNextFrequency(Filter, double, double);
 };
+
+double Filter::transitionToNextFrequency(Filter thisFilter, double targetFrequency, double incrementAmount)
+{
+    std::cout << "\nThe starting frequency before transitioning is: " << thisFilter.frequency << "." << std::endl;
+
+    while(targetFrequency <= thisFilter.frequency || thisFilter.frequency <= targetFrequency)
+    {
+        std::cout << "Transitioning... frequency is: " << thisFilter.frequency << std::endl;
+
+        if(thisFilter.frequency < targetFrequency && targetFrequency - thisFilter.frequency > incrementAmount)
+        {
+            thisFilter.frequency += incrementAmount;
+        }
+        else if(thisFilter.frequency > targetFrequency && targetFrequency - thisFilter.frequency < incrementAmount)
+        {
+            thisFilter.frequency -= incrementAmount;
+        }
+        else
+        {
+            double remainder = targetFrequency - thisFilter.frequency;
+            thisFilter.frequency += remainder; // making sure we hit that final increment without exceeding target
+            std::cout << "Frequency transition completed. Current frequency is: " << thisFilter.frequency << ".\n" << std::endl;
+            return thisFilter.frequency;
+        }   
+    }
+}
 
 void Filter::FilterKnob::spawnKnob(int numberOfKnobs, float knobLocation)
 {
@@ -143,9 +170,10 @@ struct WavetableOscillator
         {
             maxNumberOfWaveforms = 100;
             interpolationOn = true;
-            currentWavetable = 0;
+            currentWavetable = 0;  
         }
-
+                    
+        int cycleToTargetWavetable(WavetableOscillator::Wavetable table, int targetTable);   
         void loadWavetable(int wavetableToLoad, float loadTimeOffset);
     };
 
@@ -156,7 +184,36 @@ struct WavetableOscillator
         std::cout << "Waveshape is: " << waveShape << ". Volume Level is: " << volumeLevel << ".\n" << std::endl;
         return{};
     }
+
+    float fadeOutVolume(WavetableOscillator osc, float incrementAmount)
+    {
+        for(float i = osc.volumeLevel; i >= 0; i -= incrementAmount)
+        {
+            osc.volumeLevel -= incrementAmount;
+            std::cout << "Current oscillator volume is: " << osc.volumeLevel << "." << std::endl;
+            if(osc.volumeLevel <= 0)
+            {
+                std::cout << "Finished fading out!\n" << std::endl;
+                return osc.volumeLevel;
+            }
+        }
+    }
 };
+
+int WavetableOscillator::Wavetable::cycleToTargetWavetable(WavetableOscillator::Wavetable table, int targetTable)
+{
+    std::cout << "Cycling through wavetables!" << std::endl;
+    while(table.currentWavetable != targetTable)
+    {
+        table.currentWavetable += 1;
+        if(table.currentWavetable >= targetTable)
+        {
+            std::cout << "Completed cycling! Final wavetable is: " << table.currentWavetable << ".\n" << std::endl;
+            return table.currentWavetable;
+        }
+        std::cout << "Current wavetable is: " << table.currentWavetable << "." << std::endl;
+    }
+}
 
 void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float loadTimeOffset)
 {
@@ -200,8 +257,30 @@ struct Reverb
     float roomSize = 3.5f;
     double inputVolume = 1.0;
     double outputVolume = 1.0;
+    double dryWet = 1.0;
 
     int setNextReverbSettings(Reverb newVerbSettings);
+    double setNextDryWet(Reverb targetVerb, double nextDryWetValue)
+    {
+        std::cout << "\nAdjusting reverb dryWet!" << std::endl;
+        double incrementPolarity;
+        if(targetVerb.dryWet < nextDryWetValue) incrementPolarity = 0.1f;
+        else incrementPolarity = -0.1f;
+        if(nextDryWetValue > 1) 
+        {
+            std::cout << "dryWet cannot be higher than 1.0!" << std::endl;
+            return dryWet;
+        }
+        for(double dryWet = targetVerb.dryWet; dryWet != nextDryWetValue; dryWet += incrementPolarity)
+        {
+            std::cout << "Current dryWet is: " << dryWet << "." << std::endl;
+            if(dryWet <= nextDryWetValue)
+            {
+                std::cout << "Finished! New dryWet is: " << dryWet << ".\n" << std::endl;
+                return dryWet;
+            }
+        }
+    }
 };
 
 int Reverb::setNextReverbSettings(Reverb newVerbSettings)
@@ -304,6 +383,23 @@ struct SimpleLooper
 
     float createLoopPoint(float startPoint, float endPoint);
     void startLooping(float startPoint, float endPoint);
+    float playOneLoopCycle(SimpleLooper, float loopEndPoint, float incrementAmount)
+    {
+        float playhead = 0.f;
+        std::cout << "Starting one loop cycle. Playhead is currently at: " << playhead << "." << std::endl;
+
+        while(playhead <= loopEndPoint)
+        {
+            playhead += incrementAmount;
+            std::cout << "Playhead location: " << playhead << "." << std::endl;
+
+            if(playhead == loopEndPoint)
+            {
+                std::cout << "You have reached the end of the loop!" << std::endl;
+                return playhead;
+            }
+        }
+    }
 };
 
 float SimpleLooper::createLoopPoint(float newStart, float newEnd)
@@ -327,7 +423,7 @@ struct Bank
     bool canLoanMoney;
     float yearlyInterestRate;
 
-    Bank() : totalMoney(100000000.f), canLoanMoney(true), yearlyInterestRate(4.0f) {}
+    Bank() : totalMoney(100.f), canLoanMoney(true), yearlyInterestRate(4.0f) {}
     
     struct PersonalAccount
     {
@@ -350,6 +446,26 @@ struct Bank
     };
 
     void payOffLoans(Bank chase, PersonalAccount newAccount);
+    float makeDepositOverTime(Bank targetBank, float depositAmount, int howManyDeposits)
+    {
+        float newTotal = targetBank.totalMoney + depositAmount;
+        int currentDeposit = 0;
+        for(float i = targetBank.totalMoney; i <= newTotal; i = i + (depositAmount / howManyDeposits))
+        {
+            if(i == targetBank.totalMoney)
+            std::cout << "\nYour account value BEFORE the deposit is: " << targetBank.totalMoney << "." << std::endl;
+           
+            else std::cout << "Account value after deposit " << currentDeposit << " is " << i << "." << std::endl;
+            
+            currentDeposit += 1;
+
+            if(i == newTotal)
+            {
+                std::cout << "Deposit completed!\n" << std::endl;
+                return targetBank.totalMoney;
+            }
+        }
+    }
 };
 
 void Bank::payOffLoans(Bank chase, PersonalAccount tristanAccount)
@@ -433,23 +549,23 @@ void SearchEngine::SearchBar::clearSearchEngine()
 int main()
 { 
     Example::main();
- 
-    Filter myFilter;
-    Filter::FilterKnob myKnob;
+
+    Filter myFilter; 
+    //Filter::FilterKnob myKnob;
     WavetableOscillator myWavetableOsc;
     WavetableOscillator::Wavetable myWavetable;
     Reverb myReverb;
-    Reverb myOldReverb;
-    Equalizer myEqualizer;
-    Delay myDelay;
-    Synthesizer mySynth;
+    //Reverb myOldReverb;
+    //Equalizer myEqualizer;
+    //Delay myDelay;
+    //Synthesizer mySynth;
     SimpleLooper looper;
-    SearchEngine mySearchEngine;
-    SearchEngine::SearchBar mySearchBar;
+    //SearchEngine mySearchEngine;
+    //SearchEngine::SearchBar mySearchBar;
     Bank localBank;
-    Bank::PersonalAccount tristanAccount;
-    ADSREnvelope myEnvelope;
-   
+    //Bank::PersonalAccount tristanAccount;
+    //ADSREnvelope myEnvelope;
+   /*
     myEnvelope.playNote(); 
     myKnob.spawnKnob(10, 5.f);
     myWavetableOsc.getNextFrequencyInSequence(150.55f);
@@ -464,6 +580,13 @@ int main()
     tristanAccount.getValueOfAccount(tristanAccount);
     mySearchEngine.openNewBrowserWindow(5, 3.5f, 5.35f);
     mySearchBar.clearSearchEngine();
-    
+*/
+    myFilter.transitionToNextFrequency(myFilter, 5000, 150);
+    myWavetableOsc.fadeOutVolume(myWavetableOsc, 0.05f);
+    myWavetable.cycleToTargetWavetable(myWavetable, 8);
+    looper.playOneLoopCycle(looper, 10.f, 1.f);
+    localBank.makeDepositOverTime(localBank, 100, 5);
+    myReverb.setNextDryWet(myReverb, .6);
+
     std::cout << "good to go!" << std::endl;
 }
