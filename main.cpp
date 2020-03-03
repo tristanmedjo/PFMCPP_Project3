@@ -129,10 +129,13 @@ double Filter::transitionToNextFrequency(Filter thisFilter, double targetFrequen
         {
             double remainder = targetFrequency - thisFilter.frequency;
             thisFilter.frequency += remainder; // making sure we hit that final increment without exceeding target
+            
             std::cout << "Frequency transition completed. Current frequency is: " << thisFilter.frequency << ".\n" << std::endl;
             return thisFilter.frequency;
-        }   
+        }  
     }
+    
+    return thisFilter.frequency;
 }
 
 void Filter::FilterKnob::spawnKnob(int numberOfKnobs, float knobLocation)
@@ -197,6 +200,8 @@ struct WavetableOscillator
                 return osc.volumeLevel;
             }
         }
+        
+        return osc.volumeLevel;
     }
 };
 
@@ -213,6 +218,8 @@ int WavetableOscillator::Wavetable::cycleToTargetWavetable(WavetableOscillator::
         }
         std::cout << "Current wavetable is: " << table.currentWavetable << "." << std::endl;
     }
+   
+    return table.currentWavetable;
 }
 
 void WavetableOscillator::Wavetable::loadWavetable(int wavetableToLoad, float loadTimeOffset)
@@ -264,22 +271,27 @@ struct Reverb
     {
         std::cout << "\nAdjusting reverb dryWet!" << std::endl;
         double incrementPolarity;
-        if(targetVerb.dryWet < nextDryWetValue) incrementPolarity = 0.1f;
-        else incrementPolarity = -0.1f;
+
+        if(targetVerb.dryWet < nextDryWetValue) incrementPolarity = 0.1;
+        else incrementPolarity = -0.1;
+
         if(nextDryWetValue > 1) 
         {
             std::cout << "dryWet cannot be higher than 1.0!" << std::endl;
             return dryWet;
         }
-        for(double dryWet = targetVerb.dryWet; dryWet != nextDryWetValue; dryWet += incrementPolarity)
+
+        for(double instancedDryWet = targetVerb.dryWet; instancedDryWet != nextDryWetValue; instancedDryWet += incrementPolarity)
         {
-            std::cout << "Current dryWet is: " << dryWet << "." << std::endl;
-            if(dryWet <= nextDryWetValue)
+            std::cout << "Current dryWet is: " << instancedDryWet << "." << std::endl;
+
+            if(instancedDryWet <= nextDryWetValue)
             {
-                std::cout << "Finished! New dryWet is: " << dryWet << ".\n" << std::endl;
+                std::cout << "Finished! New dryWet is: " << instancedDryWet << ".\n" << std::endl;
                 return dryWet;
             }
         }
+        return dryWet;
     }
 };
 
@@ -383,12 +395,12 @@ struct SimpleLooper
 
     float createLoopPoint(float startPoint, float endPoint);
     void startLooping(float startPoint, float endPoint);
-    float playOneLoopCycle(SimpleLooper, float loopEndPoint, float incrementAmount)
+    float playOneLoopCycle(SimpleLooper, float EndPoint, float incrementAmount)
     {
         float playhead = 0.f;
         std::cout << "Starting one loop cycle. Playhead is currently at: " << playhead << "." << std::endl;
 
-        while(playhead <= loopEndPoint)
+        while(playhead <= EndPoint)
         {
             playhead += incrementAmount;
             std::cout << "Playhead location: " << playhead << "." << std::endl;
@@ -399,6 +411,7 @@ struct SimpleLooper
                 return playhead;
             }
         }
+        return playhead;
     }
 };
 
@@ -465,6 +478,8 @@ struct Bank
                 return targetBank.totalMoney;
             }
         }
+        
+        return targetBank.totalMoney;
     }
 };
 
