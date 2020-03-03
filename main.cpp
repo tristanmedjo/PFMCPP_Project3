@@ -269,6 +269,8 @@ struct Reverb
     int setNextReverbSettings(Reverb newVerbSettings);
     double setNextDryWet(Reverb targetVerb, double nextDryWetValue)
     {
+        double epsilon = 0.0001;
+
         std::cout << "\nAdjusting reverb dryWet!" << std::endl;
         double incrementPolarity;
 
@@ -281,7 +283,7 @@ struct Reverb
             return dryWet;
         }
 
-        for(double instancedDryWet = targetVerb.dryWet; instancedDryWet != nextDryWetValue; instancedDryWet += incrementPolarity)
+        for(double instancedDryWet = targetVerb.dryWet; std::abs(instancedDryWet - nextDryWetValue) > epsilon; instancedDryWet += incrementPolarity)
         {
             std::cout << "Current dryWet is: " << instancedDryWet << "." << std::endl;
 
@@ -397,6 +399,8 @@ struct SimpleLooper
     void startLooping(float startPoint, float endPoint);
     float playOneLoopCycle(SimpleLooper, float EndPoint, float incrementAmount)
     {
+        float epsilon = 0.0001f;
+
         float playhead = 0.f;
         std::cout << "Starting one loop cycle. Playhead is currently at: " << playhead << "." << std::endl;
 
@@ -405,7 +409,7 @@ struct SimpleLooper
             playhead += incrementAmount;
             std::cout << "Playhead location: " << playhead << "." << std::endl;
 
-            if(playhead == loopEndPoint)
+            if(std::abs(playhead - loopEndPoint) < epsilon)
             {
                 std::cout << "You have reached the end of the loop!" << std::endl;
                 return playhead;
@@ -465,14 +469,16 @@ struct Bank
         int currentDeposit = 0;
         for(float i = targetBank.totalMoney; i <= newTotal; i = i + (depositAmount / howManyDeposits))
         {
-            if(i == targetBank.totalMoney)
+            float epsilon = 0.0001f;
+            
+            if(std::abs(i - targetBank.totalMoney) < epsilon)
             std::cout << "\nYour account value BEFORE the deposit is: " << targetBank.totalMoney << "." << std::endl;
            
             else std::cout << "Account value after deposit " << currentDeposit << " is " << i << "." << std::endl;
             
             currentDeposit += 1;
 
-            if(i == newTotal)
+            if(std::abs(i - newTotal) < epsilon)
             {
                 std::cout << "Deposit completed!\n" << std::endl;
                 return targetBank.totalMoney;
